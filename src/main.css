@@ -1,0 +1,53 @@
+body, html {
+    height: 100%;
+  }
+
+#form_container {
+    position: relative;
+    align-items: center;
+    text-align: center;
+}
+
+#welcome_explanation{
+    text-align: center;
+    background-color: oldlace;
+    opacity: 75;
+    position: relative;
+}
+
+#background{
+    background-image: url("falling-pokeballs.jpg");
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    opacity: 50%;
+    position: absolute;
+}
+#search_form {
+    display: inline-block;
+}
+
+h1{
+    margin: auto;
+    opacity: 100%;
+}
+h3{
+    margin: auto;
+}
+#user_search_bar{
+    scale: 150%;
+    margin: 50px;
+    background: content-box;
+    width: 204px;
+}
+
+#drop_down {
+    margin: auto;
+    margin-left: 50px;
+    scale: 120%
+}
+#submit{
+    position: relative;
+    margin-left: 50px;
+    scale: 120%;
+}

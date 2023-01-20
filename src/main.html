@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Pokemon Type Lookup</title>
+        <meta name="description" content="Phase 1 Project for Flatiron School's Software Engineering course">
+        <meta name="author" content="Kelly Mark aka zigzag">
+
+        <link rel="stylesheet" href="./main.css">
+    </head>
+    <body>
+        <div id="background"></div>
+        <div id="welcome_explanation">
+            <h1 id = description_header>Pokemon Strength and Weakness Lookup</h1>
+            <h3 class="info_text">Search by Pokemon name or type and see its strengths and weaknesses</h3>
+            <h3 class="info_text">Select whether your search is by Pokemon type or Pokemon name in dropdown</h3>
+            <h4 class="info_text">If searching by type, hover over a Pokemon's name to see more info!</h4> 
+        </div>
+      <div id="form_container">
+        <form id="search_form">
+            <input type="text" id="user_search_bar" name="user_search_bar" placeholder="Enter Pokemon name or type here">
+            <select id="drop_down" name="type_or_pokemon">
+                <option value="1">Pokemon</option>
+                <option value="2">Type</option>
+            </select>
+            <input type="submit" id="submit" value="Search">
+        </form>
+      </div>
+        <div id="list_container">
+            <ul id="list">
+
+            </ul>
+        </div>
+    </body>
+</html>
