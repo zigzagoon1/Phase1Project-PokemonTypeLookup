@@ -60,3 +60,20 @@ h3{
     position: relative;
 }
 
+#table_container {
+    display: none;
+}
+
+#pokemon_table, th, td{
+    font-size: 1.5em;
+    opacity: 99%;
+    justify-content: space-between;
+    border:1px solid black;
+}
+
+img {
+    display: block;
+    position: relative;
+    font-size: 3em;
+}
+

@@ -18,18 +18,37 @@
         </div>
       <div id="form_container">
         <form id="search_form">
-            <input type="text" id="user_search_bar" name="user_search_bar" placeholder="Enter Pokemon name or type here">
+            <input type="text" id="user_search_bar" name="user_search_bar" placeholder="Enter Pokemon name or type here...">
             <select id="drop_down" name="type_or_pokemon">
-                <option value="1">Pokemon</option>
-                <option value="2">Type</option>
+                <option value="pokemon">Pokemon name</option>
+                <option value="type">Pokemon type</option>
             </select>
-            <input type="submit" id="submit" value="Search">
+            <input type="submit" id="submit_button" value="Search">
         </form>
       </div>
-        <div id="list_container">
-            <ul id="list">
+        <div id="pokemon_image">
 
-            </ul>
         </div>
+        <div id="table_container">
+            <table id="pokemon_table" style="border: 0.1em;">
+              <tr>
+                <th>Type</th>
+                <th>Strong Against</th>
+                <th>Weak Against</th>
+                <th>Generation</th>
+                <th>Evolves From</th>
+                <th>Evolves Into</th>
+              </tr>
+              <tr>
+                <td id="pokemon_type"></td>
+                <td id="strong_against"></td>
+                <td id="weak_against"></td>
+                <td id="generation"></td>
+                <td id="evolves_from"></td>
+                <td id="evolves_into"></td>
+              </tr>
+            </table>
+        </div>
+        <script src="main.js"></script> 
     </body>
 </html>
