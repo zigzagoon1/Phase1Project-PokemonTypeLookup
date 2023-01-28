@@ -1,4 +1,4 @@
-
+import getMultipliers from "./multipliers.js";
 let dropDown;
 let userSearchBar;
 document.addEventListener('DOMContentLoaded', () => {
@@ -44,7 +44,6 @@ class Pokemon {
 
 
 }
-
 function createPokemonListing(obj) {
     console.log(obj);
     const imageContainer = document.querySelector('#pokemon_image');
@@ -70,12 +69,32 @@ function createPokemonListing(obj) {
 }
 
 function fetchTypeDetails(types, obj) {
+    const lowerTypes = [];
+     types.forEach(function(type) {
+        type = type.toLowerCase();
+        lowerTypes.push(type)
+    })
     const tableStrengths = document.querySelector('#strong_against');
     const tableWeaknesses = document.querySelector('#weak_against');
-    typeURLs = [];
-    for (const type of types) {
-        typeURLs.push(obj.types[types.indexOf(type)]['type']['url']);
+    const multipliers = getMultipliers(lowerTypes);
+    console.log(multipliers);
+    const tdStrength = document.createElement('td');
+    const tdWeak = document.createElement('td');
+    for (const type in multipliers.attack) {
+        if (multipliers.attack[type] > 1) {
+            tdStrength.innerHTML += ', ' + type[0].toUpperCase() + type.substring(1);
+        } 
     }
+    for (const type in multipliers.defense) {
+        if (multipliers.defense[type] > 1) {
+            tdWeak.innerHTML += ', ' + type[0].toUpperCase() + type.substring(1);
+        }
+    }
+    tdWeak.innerHTML = tdWeak.innerHTML.substring(1);
+    tdStrength.innerHTML = tdStrength.innerHTML.substring(1)
+    tableStrengths.appendChild(tdStrength);
+    tableWeaknesses.appendChild(tdWeak);
+    console.log(multipliers);
 }
 
 function fetchGeneration(obj) {

@@ -1,4 +1,4 @@
-import all_types from '../src/all_types.json';
+import all_types from './all_types.json' assert {type: "json"};
 export default function getMultipliers(types) {
     var multipliers = {
         defense: {},
