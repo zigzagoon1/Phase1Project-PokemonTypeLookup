@@ -77,9 +77,8 @@ function fetchTypeDetails(types, obj) {
     const tableStrengths = document.querySelector('#strong_against');
     const tableWeaknesses = document.querySelector('#weak_against');
     const multipliers = getMultipliers(lowerTypes);
-    console.log(multipliers);
-    const tdStrength = document.createElement('td');
-    const tdWeak = document.createElement('td');
+    const tdStrength = document.querySelector('#strong_against');
+    const tdWeak = document.querySelector('#weak_against');
     for (const type in multipliers.attack) {
         if (multipliers.attack[type] > 1) {
             tdStrength.innerHTML += ', ' + type[0].toUpperCase() + type.substring(1);
@@ -92,9 +91,6 @@ function fetchTypeDetails(types, obj) {
     }
     tdWeak.innerHTML = tdWeak.innerHTML.substring(1);
     tdStrength.innerHTML = tdStrength.innerHTML.substring(1)
-    tableStrengths.appendChild(tdStrength);
-    tableWeaknesses.appendChild(tdWeak);
-    console.log(multipliers);
 }
 
 function fetchGeneration(obj) {
@@ -102,6 +98,47 @@ function fetchGeneration(obj) {
 }
 
 function fetchEvolutionDetails(obj) {
+    fetch(`https://pokeapi.co/api/v2/pokemon-species/${obj.name}`)
+    .then(res => res.json())
+    .then(function(objTwo) {
+        const tdEvolveFrom = document.querySelector('#evolves_from');
+        if (objTwo.evolves_from_species === null) {
+            tdEvolveFrom.innerHTML = 'None';
+        }
+        else {
+            tdEvolveFrom.innerHTML = '<a href="#user_search_bar">'+objTwo.evolves_from_species['name'][0].toUpperCase() + 
+                objTwo.evolves_from_species['name'].substring(1)+'</a>';
+            tdEvolveFrom.addEventListener('click', () => {
+                clearPage(true);
+                fetch(`https://pokeapi.co/api/v2/pokemon/${objTwo.evolves_from_species['name']}`)
+                .then(res => res.json())
+                .then(function(objThree) {
+                    createPokemonListing(objThree);
+                })
+            })
+        }
+        const tdEvolveTo = document.querySelector('#evolves_into');
+        fetch(`${objTwo.evolution_chain['url']}`)
+        .then(res => res.json())
+        .then(function(objFour) {
+            if (objFour.chain.evolves_to[0].species['name'] !== obj.name.toLowerCase()) {
+                tdEvolveTo.innerHTML =  '<a href="#user_search_bar">' + 
+                    objFour.chain.evolves_to[0].species['name'][0].toUpperCase() + 
+                    objFour.chain.evolves_to[0].species['name'].substring(1) + '</a>';
+            }
+            else {
+                tdEvolveTo.innerHTML = 'None';
+            }
+            tdEvolveTo.addEventListener('click', () => {
+                clearPage(true);
+                fetch(`https://pokeapi.co/api/v2/pokemon/${objFour.chain.evolves_to[0].species['name']}`)
+                .then(res => res.json())
+                .then(function(objFive) {
+                    createPokemonListing(objFive);
+                })
+            })
+        })
+    })
 
 }
 
@@ -109,9 +146,20 @@ function createTypeListing(obj) {
 
 }
 
-function clearPage() {
+function clearPage(clearTableBool) {
     const div = document.querySelector('#pokemon_image');
     if (div.firstChild !== null) {
         div.firstChild.remove();
+    }
+
+    if (clearTableBool) {
+        const tableType = document.querySelector('#pokemon_type');
+        tableType.innerHTML = null;
+        const tableStrengths = document.querySelector('#strong_against');
+        tableStrengths.innerHTML = null;
+        const tableWeakness = document.querySelector('#weak_against');
+        tableWeakness.innerHTML = null;
+        const tableEvolvesFrom = document.querySelector('#evolves_from');
+        tableEvolvesFrom.innerHTML = null;
     }
 }
