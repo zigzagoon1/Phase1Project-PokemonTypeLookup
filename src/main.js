@@ -98,6 +98,7 @@ function fetchGeneration(obj) {
 }
 
 function fetchEvolutionDetails(obj) {
+    console.log(obj.name);
     fetch(`https://pokeapi.co/api/v2/pokemon-species/${obj.name}`)
     .then(res => res.json())
     .then(function(objTwo) {
@@ -121,22 +122,34 @@ function fetchEvolutionDetails(obj) {
         fetch(`${objTwo.evolution_chain['url']}`)
         .then(res => res.json())
         .then(function(objFour) {
-            if (objFour.chain.evolves_to[0].species['name'] !== obj.name.toLowerCase()) {
+            console.log(objFour)
+            let pokemon;
+            if (objFour.chain.species['name'] === obj.name.toLowerCase()) {
+                tdEvolveTo.innerHTML = '<a href="#user_search_bar">' +
+                objFour.chain.evolves_to[0].species['name'][0].toUpperCase() +
+                objFour.chain.evolves_to[0].species['name'].substring(1) + '</a>';
+                pokemon = objFour.chain.evolves_to[0].species['name'];
+            }
+            else if (objFour.chain.evolves_to[0].species['name'] === obj.name.toLowerCase()) {
                 tdEvolveTo.innerHTML =  '<a href="#user_search_bar">' + 
-                    objFour.chain.evolves_to[0].species['name'][0].toUpperCase() + 
-                    objFour.chain.evolves_to[0].species['name'].substring(1) + '</a>';
+                    objFour.chain.evolves_to[0].evolves_to[0].species['name'][0].toUpperCase() + 
+                    objFour.chain.evolves_to[0].evolves_to[0].species['name'].substring(1) + '</a>';
+                    pokemon = objFour.chain.evolves_to[0].evolves_to[0].species['name'];
             }
             else {
                 tdEvolveTo.innerHTML = 'None';
             }
-            tdEvolveTo.addEventListener('click', () => {
-                clearPage(true);
-                fetch(`https://pokeapi.co/api/v2/pokemon/${objFour.chain.evolves_to[0].species['name']}`)
-                .then(res => res.json())
-                .then(function(objFive) {
-                    createPokemonListing(objFive);
+            if (tdEvolveTo.innerHTML !== 'None') {
+                tdEvolveTo.addEventListener('click', () => {
+                    clearPage(true);
+                    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+                    .then(res => res.json())
+                    .then(function(objFive) {
+                        createPokemonListing(objFive);
+                    })
                 })
-            })
+            }
+
         })
     })
 
