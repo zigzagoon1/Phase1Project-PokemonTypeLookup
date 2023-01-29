@@ -109,14 +109,17 @@ function fetchEvolutionDetails(obj) {
         else {
             tdEvolveFrom.innerHTML = '<a href="#user_search_bar">'+objTwo.evolves_from_species['name'][0].toUpperCase() + 
                 objTwo.evolves_from_species['name'].substring(1)+'</a>';
-            tdEvolveFrom.addEventListener('click', () => {
-                clearPage(true);
-                fetch(`https://pokeapi.co/api/v2/pokemon/${objTwo.evolves_from_species['name']}`)
-                .then(res => res.json())
-                .then(function(objThree) {
-                    createPokemonListing(objThree);
+            if (tdEvolveFrom.innerHTML !== 'None') {
+                tdEvolveFrom.addEventListener('click', () => {
+                    clearPage(true);
+                    fetch(`https://pokeapi.co/api/v2/pokemon/${objTwo.evolves_from_species['name']}`)
+                    .then(res => res.json())
+                    .then(function(objThree) {
+                        createPokemonListing(objThree);
+                    })
                 })
-            })
+            }
+
         }
         const tdEvolveTo = document.querySelector('#evolves_into');
         fetch(`${objTwo.evolution_chain['url']}`)
@@ -124,7 +127,14 @@ function fetchEvolutionDetails(obj) {
         .then(function(objFour) {
             console.log(objFour)
             let pokemon;
-            if (objFour.chain.species['name'] === obj.name.toLowerCase()) {
+            if (objFour.chain.evolves_to.length > 1) {
+                //for each evolution,
+                //display in table, adding event listener to each
+            }
+            else if (objFour.chain.evolves_to.length < 1) {
+                tdEvolveTo.innerHTML = 'None';
+            }
+            else if (objFour.chain.species['name'] === obj.name.toLowerCase()) {
                 tdEvolveTo.innerHTML = '<a href="#user_search_bar">' +
                 objFour.chain.evolves_to[0].species['name'][0].toUpperCase() +
                 objFour.chain.evolves_to[0].species['name'].substring(1) + '</a>';
