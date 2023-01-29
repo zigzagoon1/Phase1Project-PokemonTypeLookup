@@ -64,8 +64,7 @@ function createPokemonListing(obj) {
     }
     tableType.innerHTML = types;
     fetchTypeDetails(types, obj);
-    fetchGeneration(obj);
-    fetchEvolutionDetails(obj);
+    fetchEvolutionAndGenerationDetails(obj);
 }
 
 function fetchTypeDetails(types, obj) {
@@ -93,14 +92,40 @@ function fetchTypeDetails(types, obj) {
     tdStrength.innerHTML = tdStrength.innerHTML.substring(1)
 }
 
-function fetchGeneration(obj) {
 
-}
-
-function fetchEvolutionDetails(obj) {
+function fetchEvolutionAndGenerationDetails(obj) {
     fetch(`https://pokeapi.co/api/v2/pokemon-species/${obj.name}`)
     .then(res => res.json())
     .then(function(objTwo) {
+        const tdGeneration = document.querySelector('#generation');
+        let generation;
+        const split = objTwo.generation['name'].split('-');
+        console.log(split[1])
+        switch (split[1]) {
+            case 'i': generation = 1;
+                break;
+            case 'ii': generation = 2;
+                break;
+            case 'iii': generation = 3;
+                break;
+            case 'iv': generation = 4;
+                break;
+            case 'v': generation = 5;
+                break;
+            case 'vi': generation = 6;
+                break;
+            case 'vii': generation = 7;
+                break;
+            case 'viii': generation = 8;
+                break;
+            case 'xi': generation = 9;
+                break;
+            case 'x': generation = 10;
+                break;
+            case 'ix': generation = 11;
+                break;
+        }
+        tdGeneration.innerHTML = generation;
         const tdEvolveFrom = document.querySelector('#evolves_from');
         if (objTwo.evolves_from_species === null) {
             tdEvolveFrom.innerHTML = 'None';
