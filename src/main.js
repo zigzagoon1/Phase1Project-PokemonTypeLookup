@@ -98,7 +98,6 @@ function fetchGeneration(obj) {
 }
 
 function fetchEvolutionDetails(obj) {
-    console.log(obj.name);
     fetch(`https://pokeapi.co/api/v2/pokemon-species/${obj.name}`)
     .then(res => res.json())
     .then(function(objTwo) {
@@ -128,19 +127,35 @@ function fetchEvolutionDetails(obj) {
             console.log(objFour)
             let pokemon;
             if (objFour.chain.evolves_to.length > 1) {
+                objFour.chain.evolves_to.forEach(evo => {
+                     tdEvolveTo.innerHTML += ', <a id="' + evo.species["name"]  + '"href="#user_search_bar">' + evo.species['name'] + '</a>'
+                     const tableEvo = document.querySelector(`#${evo.species['name']}`);
+                     console.log(tableEvo)
+                     tableEvo.addEventListener('click', function() {
+                        console.log('hereInEventListener');
+                        clearPage(true);
+                        fetch(`https://pokeapi.co/api/v2/pokemon/${evo.species['name']}`)
+                        .then(res => res.json())
+                        .then(function(objSix, ) {
+                            createPokemonListing(objSix);
+                        })
+                    });
+                })
+                tdEvolveTo.innerHTML = tdEvolveTo.innerHTML.substring(1);
+                pokemon = null;
                 //for each evolution,
                 //display in table, adding event listener to each
             }
             else if (objFour.chain.evolves_to.length < 1) {
                 tdEvolveTo.innerHTML = 'None';
             }
-            else if (objFour.chain.species['name'] === obj.name.toLowerCase()) {
+            else if (objFour.chain.evolves_to.length < 2 && objFour.chain.species['name'] === obj.name.toLowerCase()) {
                 tdEvolveTo.innerHTML = '<a href="#user_search_bar">' +
                 objFour.chain.evolves_to[0].species['name'][0].toUpperCase() +
                 objFour.chain.evolves_to[0].species['name'].substring(1) + '</a>';
                 pokemon = objFour.chain.evolves_to[0].species['name'];
             }
-            else if (objFour.chain.evolves_to[0].species['name'] === obj.name.toLowerCase()) {
+            else if (obj.Four.chain.evolves_to.length < 2 && objFour.chain.evolves_to[0].species['name'] === obj.name.toLowerCase()) {
                 tdEvolveTo.innerHTML =  '<a href="#user_search_bar">' + 
                     objFour.chain.evolves_to[0].evolves_to[0].species['name'][0].toUpperCase() + 
                     objFour.chain.evolves_to[0].evolves_to[0].species['name'].substring(1) + '</a>';
@@ -149,7 +164,8 @@ function fetchEvolutionDetails(obj) {
             else {
                 tdEvolveTo.innerHTML = 'None';
             }
-            if (tdEvolveTo.innerHTML !== 'None') {
+            if (tdEvolveTo.innerHTML !== 'None' && pokemon !== null) {
+                console.log('here');
                 tdEvolveTo.addEventListener('click', () => {
                     clearPage(true);
                     fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
