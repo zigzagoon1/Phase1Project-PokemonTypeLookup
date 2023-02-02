@@ -24,7 +24,7 @@ function fetchPokemonOrType(e) {
     .then(res => res.json())
     .then(function(obj) {
         if (searchBy === 'type') {
-            createTypeListing(obj);
+            createTypeListing(obj, e);
         }
         else {
             createPokemonListing(obj);
@@ -32,18 +32,7 @@ function fetchPokemonOrType(e) {
     })
 }
 
-class Pokemon {
-    constructor(types, strengths, weaknesses, generation, evolvesFrom, evolvesTo) {
-        this._types = types;
-        this._strengths = strengths;
-        this._weaknesses = weaknesses;
-        this._generation = generation;
-        this._evolvesFrom = evolvesFrom;
-        this._evolvesTo = evolvesTo;
-    }
 
-
-}
 function createPokemonListing(obj) {
     console.log(obj);
     const imageContainer = document.querySelector('#pokemon_image');
@@ -51,7 +40,7 @@ function createPokemonListing(obj) {
     img.src = obj.sprites.front_default;
     img.alt = `${obj.name}`;
     imageContainer.appendChild(img);
-    const table = document.querySelector('#table_container');
+    const table = document.querySelector('#pokemon_table_container');
     table.style.display = 'block';
     
     const tableType = document.querySelector('#pokemon_type');
@@ -100,7 +89,6 @@ function fetchEvolutionAndGenerationDetails(obj) {
         const tdGeneration = document.querySelector('#generation');
         let generation;
         const split = objTwo.generation['name'].split('-');
-        console.log(split[1])
         switch (split[1]) {
             case 'i': generation = 1;
                 break;
@@ -151,26 +139,34 @@ function fetchEvolutionAndGenerationDetails(obj) {
         .then(function(objFour) {
             console.log(objFour)
             let pokemon;
-            if (objFour.chain.evolves_to.length > 1) {
-                objFour.chain.evolves_to.forEach(evo => {
-                     tdEvolveTo.innerHTML += ', <a id="' + evo.species["name"]  + '"href="#user_search_bar">' + evo.species['name'] + '</a>'
-                     const tableEvo = document.querySelector(`#${evo.species['name']}`);
-                     console.log(tableEvo)
-                     tableEvo.addEventListener('click', function() {
-                        console.log('hereInEventListener');
-                        clearPage(true);
-                        fetch(`https://pokeapi.co/api/v2/pokemon/${evo.species['name']}`)
-                        .then(res => res.json())
-                        .then(function(objSix, ) {
-                            createPokemonListing(objSix);
-                        })
-                    });
-                })
-                tdEvolveTo.innerHTML = tdEvolveTo.innerHTML.substring(1);
-                pokemon = null;
-                //for each evolution,
-                //display in table, adding event listener to each
-            }
+            let innerString = "";
+            let evoChain;
+            if (objFour.chain.evolves_to.length > 1 || objFour.chain.evolves_to[0].evolves_to.length > 1 || objFour.chain.evolves_to[0].evolves_to[0].evolves_to.length > 1) {
+                if (objFour.chain.evolves_to.length > 1) {
+                    evoChain = objFour.chain.evolves_to;
+                    
+                }
+                else {
+                    evoChain = objFour.chain.evolves_to[0].evolves_to;
+                    console.log(evoChain)
+                }
+                    evoChain.forEach(evo => {
+                        innerString += ', <a id="' + evo.species["name"]  + '"href="#user_search_bar">' + evo.species['name'] + '</a>'
+                       });
+                   tdEvolveTo.innerHTML = innerString.substring(1);
+                   for (let i = 0; i < evoChain.length; i++) {
+                       const tableEvo = document.querySelector(`#${evoChain[i].species['name']}`);
+                       tableEvo.addEventListener('click', function() {
+                           clearPage(true);
+                           fetch(`https://pokeapi.co/api/v2/pokemon/${evoChain[i].species['name']}`)
+                           .then(res => res.json())
+                           .then(function(objSix, ) {
+                               createPokemonListing(objSix);
+                           })
+                       })
+                   }
+                   pokemon = null;
+                }
             else if (objFour.chain.evolves_to.length < 1) {
                 tdEvolveTo.innerHTML = 'None';
             }
@@ -205,9 +201,76 @@ function fetchEvolutionAndGenerationDetails(obj) {
     })
 
 }
+class Pokemon {
+    constructor(stats) {
+        this._stats = stats;
+    }
+}
+function createTypeListing(obj, e) {
+    fetch(`https://pokeapi.co/api/v2/type/${e.target.user_search_bar.value}`)
+    .then(res => res.json())
+    .then(function(objTwo) {
+        console.log(objTwo);
+        const table = document.querySelector('#type_table_container');
+        table.style.display = 'block';
 
-function createTypeListing(obj) {
+        const type = document.querySelector('#type_searched');
+        type.innerHTML = objTwo.name[0].toUpperCase() + objTwo.name.substring(1);
 
+        setDamage('double_damage_to', objTwo);
+        setDamage('double_damage_from', objTwo);
+
+        setDamage('half_damage_to', objTwo);
+        setDamage('half_damage_from', objTwo);
+
+        setDamage('no_damage_to', objTwo);
+        setDamage('no_damage_from', objTwo);
+
+        const pokeHeader = document.querySelector('#poke_type_header');
+        const ol = document.createElement('ol');
+        for (let i = 0; i < objTwo.pokemon.length; i++) {
+            const li = document.createElement('li');
+            fetch(`${objTwo.pokemon[i].pokemon.url}`)
+            .then(res => res.json())
+            .then(function(objThree){
+                const baseStats = [];
+                objThree.stats.forEach(stat => {
+                    baseStats.push({name: stat['stat']['name'], base: stat.base_stat});
+                })
+                const pokemon = new Pokemon(baseStats);
+                li.innerHTML = objTwo.pokemon[i].pokemon.name;
+                li.className = 'tooltip';
+                const p = document.createElement('p');
+                p.className = 'tooltiptext';
+                li.appendChild(p);
+                console.log(pokemon);
+                li.addEventListener('mouseover', function() {
+                    p.style.display = "block"
+                    p.innerHTML = `Base Stats: <br>HP: ${pokemon._stats[0].base}<br> Attack: ${pokemon._stats[1].base}<br>
+                     Defense: ${pokemon._stats[2].base}<br>
+                     Special Attack: ${pokemon._stats[3].base}<br>
+                     Special Defense: ${pokemon._stats[4].base}<br> Speed: ${pokemon._stats[5].base} `;
+                })
+                li.addEventListener('mouseleave', function() {
+                    p.style.display = 'none';                    
+                })
+                ol.appendChild(li);
+        })
+        pokeHeader.appendChild(ol);
+}})
+}
+
+function setDamage(damageType, obj) {
+    const damage = document.querySelector(`#${damageType}`);
+    let innerString = "";
+    for (let i = 0; i < obj.damage_relations[damageType].length; i++) {
+        innerString += `, ${obj.damage_relations[damageType][i].name[0].toUpperCase() +
+        obj.damage_relations[damageType][i].name.substring(1)}`;
+    }
+    if (innerString === "") {
+        innerString = ' None'; 
+    }
+    damage.innerHTML = innerString.substring(1);
 }
 
 function clearPage(clearTableBool) {
@@ -215,7 +278,6 @@ function clearPage(clearTableBool) {
     if (div.firstChild !== null) {
         div.firstChild.remove();
     }
-
     if (clearTableBool) {
         const tableType = document.querySelector('#pokemon_type');
         tableType.innerHTML = null;

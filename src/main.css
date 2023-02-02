@@ -60,7 +60,7 @@ h3{
     position: relative;
 }
 
-#table_container {
+#pokemon_table_container, #type_table_container {
     display: none;
 }
 
@@ -78,3 +78,18 @@ img {
     font-size: 3em;
 }
 
+.tooltip{
+    position:relative;
+    display: flex;
+    border-bottom: 1-x dotted black;
+}
+
+.tooltiptext {
+    display: none;
+    position: absolute;
+    top: -60px;
+    left: 150px;
+    z-index: 1;
+    background-color: antiquewhite;
+    padding: 8px;
+}
