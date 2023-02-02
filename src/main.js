@@ -61,8 +61,6 @@ function fetchTypeDetails(types, obj) {
         type = type.toLowerCase();
         lowerTypes.push(type)
     })
-    const tableStrengths = document.querySelector('#strong_against');
-    const tableWeaknesses = document.querySelector('#weak_against');
     const multipliers = getMultipliers(lowerTypes);
     const tdStrength = document.querySelector('#strong_against');
     const tdWeak = document.querySelector('#weak_against');
@@ -115,7 +113,7 @@ function fetchEvolutionAndGenerationDetails(obj) {
             let pokemon;
             let innerString = "";
             let evoChain;
-            if (objFour.chain.evolves_to.length > 1 || objFour.chain.evolves_to[0].evolves_to.length > 1 || objFour.chain.evolves_to[0].evolves_to[0].evolves_to.length > 1) {
+            if (objFour.chain.evolves_to.length > 1 || objFour.chain.evolves_to[0].evolves_to.length > 1) {
                 if (objFour.chain.evolves_to.length > 1) {
                     evoChain = objFour.chain.evolves_to;
                     
@@ -149,7 +147,7 @@ function fetchEvolutionAndGenerationDetails(obj) {
                 objFour.chain.evolves_to[0].species['name'].substring(1) + '</a>';
                 pokemon = objFour.chain.evolves_to[0].species['name'];
             }
-            else if (obj.Four.chain.evolves_to.length < 2 && objFour.chain.evolves_to[0].species['name'] === obj.name.toLowerCase()) {
+            else if (objFour.chain.evolves_to[0].species['name'] === obj.name.toLowerCase()) {
                 tdEvolveTo.innerHTML =  '<a href="#user_search_bar">' + 
                     objFour.chain.evolves_to[0].evolves_to[0].species['name'][0].toUpperCase() + 
                     objFour.chain.evolves_to[0].evolves_to[0].species['name'].substring(1) + '</a>';
@@ -159,20 +157,19 @@ function fetchEvolutionAndGenerationDetails(obj) {
                 tdEvolveTo.innerHTML = 'None';
             }
             if (tdEvolveTo.innerHTML !== 'None' && pokemon !== null) {
-                tdEvolveTo.addEventListener('click', () => {
+                tdEvolveTo.addEventListener('click', function handler() {
                     clearPage(true);
                     fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
                     .then(res => res.json())
                     .then(function(objFive) {
+                        tdEvolveTo.removeEventListener('click', handler)
                         createPokemonListing(objFive);
                     })
                 })
             }
-
         })
     })
 }
-
 function setGenerationFromNumeral(romanNumeral) {
     switch (romanNumeral) {
         case 'i': return 1;
@@ -277,12 +274,15 @@ function clearPage(clearTableBool) {
     }
     if (clearTableBool) {
         const tableType = document.querySelector('#pokemon_type');
-        tableType.innerHTML = null;
+        tableType.innerHTML = "";
         const tableStrengths = document.querySelector('#strong_against');
-        tableStrengths.innerHTML = null;
+        tableStrengths.innerHTML = "";
         const tableWeakness = document.querySelector('#weak_against');
-        tableWeakness.innerHTML = null;
+        tableWeakness.innerHTML = "";
         const tableEvolvesFrom = document.querySelector('#evolves_from');
-        tableEvolvesFrom.innerHTML = null;
+        tableEvolvesFrom.innerHTML = "";
+        const tableEvolvesTo = document.querySelector('#evolves_into');
+        tableEvolvesTo.innerHTML = "";
     }
+    
 }
