@@ -34,7 +34,6 @@ function fetchPokemonOrType(e) {
 
 
 function createPokemonListing(obj) {
-    console.log(obj);
     const imageContainer = document.querySelector('#pokemon_image');
     const img = document.createElement('img');
     img.src = obj.sprites.front_default;
@@ -113,7 +112,6 @@ function fetchEvolutionAndGenerationDetails(obj) {
         fetch(`${objTwo.evolution_chain['url']}`)
         .then(res => res.json())
         .then(function(objFour) {
-            console.log(objFour)
             let pokemon;
             let innerString = "";
             let evoChain;
@@ -124,7 +122,6 @@ function fetchEvolutionAndGenerationDetails(obj) {
                 }
                 else {
                     evoChain = objFour.chain.evolves_to[0].evolves_to;
-                    console.log(evoChain)
                 }
                     evoChain.forEach(evo => {
                         innerString += ', <a id="' + evo.species["name"]  + '"href="#user_search_bar">' + evo.species['name'] + '</a>'
@@ -162,7 +159,6 @@ function fetchEvolutionAndGenerationDetails(obj) {
                 tdEvolveTo.innerHTML = 'None';
             }
             if (tdEvolveTo.innerHTML !== 'None' && pokemon !== null) {
-                console.log('here');
                 tdEvolveTo.addEventListener('click', () => {
                     clearPage(true);
                     fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
@@ -213,7 +209,6 @@ function createTypeListing(obj, e) {
     fetch(`https://pokeapi.co/api/v2/type/${e.target.user_search_bar.value}`)
     .then(res => res.json())
     .then(function(objTwo) {
-        console.log(objTwo);
         const table = document.querySelector('#type_table_container');
         table.style.display = 'block';
 
@@ -246,7 +241,6 @@ function createTypeListing(obj, e) {
                 const p = document.createElement('p');
                 p.className = 'tooltiptext';
                 li.appendChild(p);
-                console.log(pokemon);
                 li.addEventListener('mouseover', function() {
                     p.style.display = "block"
                     p.innerHTML = `Base Stats: <br>HP: ${pokemon._stats[0].base}<br> Attack: ${pokemon._stats[1].base}<br>
