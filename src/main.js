@@ -95,11 +95,12 @@ function fetchEvolutionAndGenerationDetails(obj) {
             tdEvolveFrom.innerHTML = '<a href="#user_search_bar">'+objTwo.evolves_from_species['name'][0].toUpperCase() + 
                 objTwo.evolves_from_species['name'].substring(1)+'</a>';
             if (tdEvolveFrom.innerHTML !== 'None') {
-                tdEvolveFrom.addEventListener('click', () => {
+                tdEvolveFrom.addEventListener('click', function handler() {
                     clearPage(true);
                     fetch(`https://pokeapi.co/api/v2/pokemon/${objTwo.evolves_from_species['name']}`)
                     .then(res => res.json())
                     .then(function(objThree) {
+                        tdEvolveFrom.removeEventListener('click', handler)
                         createPokemonListing(objThree);
                     })
                 })
