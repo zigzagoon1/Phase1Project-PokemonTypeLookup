@@ -1,2 +1,6 @@
-# Phase1Project-PokemonTypeLookup
-Uses a Pokemon API to allow users to look up type matchups, specific Pokemon weaknesses, and more! 
+#Pokemon Type Lookup
+Uses a Pokémon API to allow users to look up type matchups, specific Pokémon weaknesses, and more! 
+
+##Usage
+You can search by a specific Pokémon name and see information like that Pokémon's sprite, type or types, type strengths, type weaknesses, the generation the Pokémon was introduced in, what it evolves from, if any, and what it evolves into, if any.
+Or, you can search by a specific type of Pokémon and see a list of all the Pokémon that share that type, as well as all the damage relations of that type such as what it gives double damage to and from, half damage to and from, and no damage to and from, if any.  

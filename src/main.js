@@ -29,12 +29,13 @@ function fetchPokemonOrType(e) {
             createPokemonListing(obj);
         }
     })
-    const form = document.querySelector('#search_form');
-    form.reset();
+
 }
 
 
 function createPokemonListing(obj) {
+    resetForm();
+    clearPage(true);
     const imageContainer = document.querySelector('#pokemon_image');
     const img = document.createElement('img');
     img.src = obj.sprites.front_default;
@@ -65,6 +66,7 @@ function fetchTypeDetails(types, obj) {
     const multipliers = getMultipliers(lowerTypes);
     const tdStrength = document.querySelector('#strong_against');
     const tdWeak = document.querySelector('#weak_against');
+    
     for (const type in multipliers.attack) {
         if (multipliers.attack[type] > 1) {
             tdStrength.innerHTML += ', ' + type[0].toUpperCase() + type.substring(1);
@@ -213,14 +215,16 @@ class Pokemon {
     }
 }
 function createTypeListing(obj, e) {
+    clearPage(true);
     fetch(`https://pokeapi.co/api/v2/type/${e.target.user_search_bar.value}`)
     .then(res => res.json())
     .then(function(objTwo) {
+        resetForm();
         const table = document.querySelector('#type_table_container');
         table.style.display = 'block';
-
+        console.log(objTwo);
         const type = document.querySelector('#type_searched');
-        type.innerHTML = objTwo.name[0].toUpperCase() + objTwo.name.substring(1);
+        type.innerHTML = objTwo['name'][0].toUpperCase() + objTwo.name.substring(1);
 
         setDamage('double_damage_to', objTwo);
         setDamage('double_damage_from', objTwo);
@@ -293,6 +297,29 @@ function clearPage(clearTableBool) {
         tableEvolvesFrom.innerHTML = "";
         const tableEvolvesTo = document.querySelector('#evolves_into');
         tableEvolvesTo.innerHTML = "";
+
+        // const typeSearched = document.querySelector('#type_searched');
+        // typeSearched.innerHTML = "";
+        // const ddTo = document.querySelector('#double_damage_to');
+        // ddTo.innerHTML = "";
+        // const ddFrom = document.querySelector('#double_damage_from');
+        // ddTo.innerHTML = "";
+        // const hdTo = document.querySelector('#half_damage_to');
+        // hdTo.innerHTML = "";
+        // const hdFrom = document.querySelector('#half_damag_from');
+        // hdFrom.innerHTML = "";
+        const pokeType = document.querySelector('#poke_type_header');
+        while (pokeType.firstChild) {
+            pokeType.firstChild.remove();
+        }
     }
-    
+    const typeTable = document.querySelector('#type_table_container');
+    typeTable.style.display = 'none';
+    const pokemonTable = document.querySelector('#pokemon_table_container');
+    pokemonTable.style.display = 'none';
+}
+
+function resetForm() {
+    const form = document.querySelector('#search_form');
+    form.reset();
 }
