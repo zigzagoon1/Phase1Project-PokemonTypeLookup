@@ -216,7 +216,8 @@ class Pokemon {
 }
 function createTypeListing(obj, e) {
     clearPage(true);
-    fetch(`https://pokeapi.co/api/v2/type/${e.target.user_search_bar.value}`)
+    const searchedType = e.target.user_search_bar.value.toLowerCase();
+    fetch(`https://pokeapi.co/api/v2/type/${searchedType}`)
     .then(res => res.json())
     .then(function(objTwo) {
         resetForm();
@@ -247,7 +248,7 @@ function createTypeListing(obj, e) {
                     baseStats.push({name: stat['stat']['name'], base: stat.base_stat});
                 })
                 const pokemon = new Pokemon(baseStats);
-                li.innerHTML = objTwo.pokemon[i].pokemon.name;
+                li.innerHTML = objTwo.pokemon[i].pokemon.name[0].toUpperCase() + objTwo.pokemon[i].pokemon.name.substring(1);
                 li.className = 'tooltip';
                 const p = document.createElement('p');
                 p.className = 'tooltiptext';
