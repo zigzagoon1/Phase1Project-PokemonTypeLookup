@@ -22,6 +22,7 @@ function fetchPokemonOrType(e) {
     fetch(`https://pokeapi.co/api/v2/${searchBy}/${searchThis}`)
     .then(res => res.json())
     .then(function(obj) {
+        console.log(obj);
         if (searchBy === 'type') {
             createTypeListing(obj, e);
         }
@@ -29,9 +30,7 @@ function fetchPokemonOrType(e) {
             createPokemonListing(obj);
         }
     })
-
 }
-
 
 function createPokemonListing(obj) {
     resetForm();
@@ -129,7 +128,6 @@ function fetchEvolutionAndGenerationDetails(obj) {
                     evoChain.forEach(evo => {
                         if (objTwo.name === evo.species['name']) {
                             namesMatch = true;
-                            console.log('names match');
                         }
                         innerString += ', <a id="' + evo.species["name"]  + '"href="#user_search_bar">' + evo.species['name'] + '</a>'
                        });
@@ -223,7 +221,6 @@ function createTypeListing(obj, e) {
         resetForm();
         const table = document.querySelector('#type_table_container');
         table.style.display = 'block';
-        console.log(objTwo);
         const type = document.querySelector('#type_searched');
         type.innerHTML = objTwo['name'][0].toUpperCase() + objTwo.name.substring(1);
 
