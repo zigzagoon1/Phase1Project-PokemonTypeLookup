@@ -18,7 +18,6 @@ function fetchPokemonOrType(e) {
     const div = document.querySelector('#pokemon_image');
     if (div.firstChild !== null) {
     clearPage();
-
     }
     fetch(`https://pokeapi.co/api/v2/${searchBy}/${searchThis}`)
     .then(res => res.json())
@@ -30,6 +29,8 @@ function fetchPokemonOrType(e) {
             createPokemonListing(obj);
         }
     })
+    const form = document.querySelector('#search_form');
+    form.reset();
 }
 
 
@@ -114,15 +115,20 @@ function fetchEvolutionAndGenerationDetails(obj) {
             let pokemon;
             let innerString = "";
             let evoChain;
+            let namesMatch = false;
             if (objFour.chain.evolves_to.length > 1 || objFour.chain.evolves_to[0].evolves_to.length > 1) {
                 if (objFour.chain.evolves_to.length > 1) {
                     evoChain = objFour.chain.evolves_to;
-                    
                 }
                 else {
                     evoChain = objFour.chain.evolves_to[0].evolves_to;
                 }
+                
                     evoChain.forEach(evo => {
+                        if (objTwo.name === evo.species['name']) {
+                            namesMatch = true;
+                            console.log('names match');
+                        }
                         innerString += ', <a id="' + evo.species["name"]  + '"href="#user_search_bar">' + evo.species['name'] + '</a>'
                        });
                    tdEvolveTo.innerHTML = innerString.substring(1);
@@ -155,6 +161,9 @@ function fetchEvolutionAndGenerationDetails(obj) {
                     pokemon = objFour.chain.evolves_to[0].evolves_to[0].species['name'];
             }
             else {
+                tdEvolveTo.innerHTML = 'None';
+            }
+            if (namesMatch) {
                 tdEvolveTo.innerHTML = 'None';
             }
             if (tdEvolveTo.innerHTML !== 'None' && pokemon !== null) {
