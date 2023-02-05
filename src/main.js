@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 })
 function fetchPokemonOrType(e) {
-    const searchBy = e.target.type_or_pokemon.value;
-    const searchThis = e.target.user_search_bar.value.toLowerCase();
+    let searchBy = e.target.type_or_pokemon.value;
+    let searchThis = e.target.user_search_bar.value.toLowerCase();
     
     const div = document.querySelector('#pokemon_image');
     if (div.firstChild !== null) {
@@ -28,6 +28,23 @@ function fetchPokemonOrType(e) {
         else {
             createPokemonListing(obj);
         }
+    })
+    .catch(() => {
+        const notFoundDiv = document.createElement('div');
+        const notFoundH = document.createElement('h1');
+        const notFoundHTwo = document.createElement('h2');
+        notFoundH.style.opacity = '99%';
+        notFoundH.style.paddingTop = '25px';
+        notFoundHTwo.style.opacity = '99%';
+        if (searchBy === 'pokemon') {
+            searchBy = 'Pokémon'
+        }
+        searchThis = searchThis[0].toUpperCase() + searchThis.substring(1);
+        notFoundH.innerHTML = `${searchThis} is not a known ${searchBy}`;
+        notFoundHTwo.innerHTML = `Check your spelling and make sure you searched with the correct filter.`
+        notFoundDiv.appendChild(notFoundH);
+        notFoundDiv.appendChild(notFoundHTwo);
+        document.querySelector('body').appendChild(notFoundDiv);
     })
 }
 
