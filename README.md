@@ -1,5 +1,5 @@
 # Pokemon Type Lookup
-Uses a Pokémon API to allow users to look up type matchups, specific Pokémon weaknesses, and more! 
+Uses PokéAPI to allow users to look up type matchups, specific Pokémon weaknesses, and more! 
 
 ## Usage
 You can use the search bar to search by a specific Pokémon name (i.e. Pikachu) and see information like that Pokémon's sprite, type or types, its strengths, its weaknesses, the generation the Pokémon was introduced in, what it evolves from, if any, and what it evolves into, if any.

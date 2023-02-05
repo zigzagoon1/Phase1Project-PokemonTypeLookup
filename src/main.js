@@ -22,7 +22,6 @@ function fetchPokemonOrType(e) {
     fetch(`https://pokeapi.co/api/v2/${searchBy}/${searchThis}`)
     .then(res => res.json())
     .then(function(obj) {
-        console.log('original fetch');
         if (searchBy === 'type') {
             createTypeListing(obj, e);
         }
@@ -35,7 +34,6 @@ function fetchPokemonOrType(e) {
 function createPokemonListing(obj) {
     resetForm();
     clearPage(true);
-    console.log('create pokemon listing');
     const imageContainer = document.querySelector('#pokemon_image');
     const img = document.createElement('img');
     img.src = obj.sprites.front_default;
@@ -83,7 +81,6 @@ function fetchTypeDetails(types, obj) {
 
 
 function fetchEvolutionAndGenerationDetails(obj) {
-    console.log('fetchEvolutionAndGenerationDetails');
     fetch(`https://pokeapi.co/api/v2/pokemon-species/${obj.name}`)
     .then(res => res.json())
     .then(function(objTwo) {
@@ -160,7 +157,6 @@ function fetchEvolutionAndGenerationDetails(obj) {
             }
             else if (objFour.chain.evolves_to[0].species['name'] === obj.name.toLowerCase() && objFour.chain.
             evolves_to[0].evolves_to.length > 0) {
-                console.log(objFour.chain)
                 tdEvolveTo.innerHTML =  '<a href="#user_search_bar">' + 
                     objFour.chain.evolves_to[0].evolves_to[0].species['name'][0].toUpperCase() + 
                     objFour.chain.evolves_to[0].evolves_to[0].species['name'].substring(1) + '</a>';
@@ -176,7 +172,6 @@ function fetchEvolutionAndGenerationDetails(obj) {
                 const clone = tdEvolveTo.cloneNode(true);
                 tdEvolveTo.parentNode.replaceChild(clone, tdEvolveTo);
                 clone.addEventListener('click', function handlerTwo() {
-
                     clearPage(true);
                     fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
                     .then(res => res.json())
