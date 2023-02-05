@@ -137,54 +137,59 @@ function fetchEvolutionAndGenerationDetails(obj) {
             let innerString = "";
             let evoChain;
             let namesMatch = false;
-            if (objFour.chain.evolves_to.length > 1 || objFour.chain.evolves_to[0].evolves_to.length > 1) {
-                if (objFour.chain.evolves_to.length > 1) {
-                    evoChain = objFour.chain.evolves_to;
+            if (objFour.chain.evolves_to.length > 0) {
+                if (objFour.chain.evolves_to.length > 1 || objFour.chain.evolves_to[0].evolves_to.length > 1) {
+                    if (objFour.chain.evolves_to.length > 1) {
+                        evoChain = objFour.chain.evolves_to;
+                    }
+                    else {
+                        evoChain = objFour.chain.evolves_to[0].evolves_to;
+                    }
+                    
+                        evoChain.forEach(evo => {
+                            if (objTwo.name === evo.species['name']) {
+                                namesMatch = true;
+                            }
+                            innerString += ', <a id="' + evo.species["name"]  + '"href="#user_search_bar">' + evo.species['name'] + '</a>'
+                           });
+                       tdEvolveTo.innerHTML = innerString.substring(1);
+                       for (let i = 0; i < evoChain.length; i++) {
+                           const tableEvo = document.querySelector(`#${evoChain[i].species['name']}`);
+                           tableEvo.addEventListener('click', function() {
+                               clearPage(true);
+                               fetch(`https://pokeapi.co/api/v2/pokemon/${evoChain[i].species['name']}`)
+                               .then(res => res.json())
+                               .then(function(objSix, ) {
+                                   createPokemonListing(objSix);
+                               })
+                           })
+                       }
+                       pokemon = null;
+                    }
+                else if (objFour.chain.evolves_to.length < 1) {
+                    tdEvolveTo.innerHTML = 'None';
+                }
+                else if (objFour.chain.evolves_to.length < 2 && objFour.chain.species['name'] === obj.name.toLowerCase()) {
+                    tdEvolveTo.innerHTML = '<a href="#user_search_bar">' +
+                    objFour.chain.evolves_to[0].species['name'][0].toUpperCase() +
+                    objFour.chain.evolves_to[0].species['name'].substring(1) + '</a>';
+                    pokemon = objFour.chain.evolves_to[0].species['name'];
+                }
+                else if (objFour.chain.evolves_to[0].species['name'] === obj.name.toLowerCase() && objFour.chain.
+                evolves_to[0].evolves_to.length > 0) {
+                    tdEvolveTo.innerHTML =  '<a href="#user_search_bar">' + 
+                        objFour.chain.evolves_to[0].evolves_to[0].species['name'][0].toUpperCase() + 
+                        objFour.chain.evolves_to[0].evolves_to[0].species['name'].substring(1) + '</a>';
+                        pokemon = objFour.chain.evolves_to[0].evolves_to[0].species['name'];
                 }
                 else {
-                    evoChain = objFour.chain.evolves_to[0].evolves_to;
+                    tdEvolveTo.innerHTML = 'None';
                 }
-                
-                    evoChain.forEach(evo => {
-                        if (objTwo.name === evo.species['name']) {
-                            namesMatch = true;
-                        }
-                        innerString += ', <a id="' + evo.species["name"]  + '"href="#user_search_bar">' + evo.species['name'] + '</a>'
-                       });
-                   tdEvolveTo.innerHTML = innerString.substring(1);
-                   for (let i = 0; i < evoChain.length; i++) {
-                       const tableEvo = document.querySelector(`#${evoChain[i].species['name']}`);
-                       tableEvo.addEventListener('click', function() {
-                           clearPage(true);
-                           fetch(`https://pokeapi.co/api/v2/pokemon/${evoChain[i].species['name']}`)
-                           .then(res => res.json())
-                           .then(function(objSix, ) {
-                               createPokemonListing(objSix);
-                           })
-                       })
-                   }
-                   pokemon = null;
-                }
-            else if (objFour.chain.evolves_to.length < 1) {
-                tdEvolveTo.innerHTML = 'None';
-            }
-            else if (objFour.chain.evolves_to.length < 2 && objFour.chain.species['name'] === obj.name.toLowerCase()) {
-                tdEvolveTo.innerHTML = '<a href="#user_search_bar">' +
-                objFour.chain.evolves_to[0].species['name'][0].toUpperCase() +
-                objFour.chain.evolves_to[0].species['name'].substring(1) + '</a>';
-                pokemon = objFour.chain.evolves_to[0].species['name'];
-            }
-            else if (objFour.chain.evolves_to[0].species['name'] === obj.name.toLowerCase() && objFour.chain.
-            evolves_to[0].evolves_to.length > 0) {
-                tdEvolveTo.innerHTML =  '<a href="#user_search_bar">' + 
-                    objFour.chain.evolves_to[0].evolves_to[0].species['name'][0].toUpperCase() + 
-                    objFour.chain.evolves_to[0].evolves_to[0].species['name'].substring(1) + '</a>';
-                    pokemon = objFour.chain.evolves_to[0].evolves_to[0].species['name'];
-            }
-            else {
-                tdEvolveTo.innerHTML = 'None';
             }
             if (namesMatch) {
+                tdEvolveTo.innerHTML = 'None';
+            }
+            if (tdEvolveTo.innerHTML === "") {
                 tdEvolveTo.innerHTML = 'None';
             }
             if (tdEvolveTo.innerHTML !== 'None' && pokemon !== null) {
