@@ -60,3 +60,41 @@ h3{
     position: relative;
 }
 
+#pokemon_table_container, #type_table_container {
+    display: none;
+}
+
+#pokemon_table, th, td{
+    font-size: 1.5em;
+    opacity: 99%;
+    justify-content: space-between;
+    border:1px solid black;
+    text-align: center;
+}
+
+#pokemon_image {
+    display: block;
+    position: relative;
+    text-align: center;
+}
+
+img {
+    height: 200px;
+    width: 200px;
+}
+
+.tooltip{
+    position:relative;
+    display: flex;
+    border-bottom: 1-x dotted black;
+}
+
+.tooltiptext {
+    display: none;
+    position: absolute;
+    top: -60px;
+    left: 150px;
+    z-index: 1;
+    background-color: antiquewhite;
+    padding: 8px;
+}
