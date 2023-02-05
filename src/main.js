@@ -30,7 +30,8 @@ function fetchPokemonOrType(e) {
         }
     })
     .catch(() => {
-        const notFoundDiv = document.createElement('div');
+        clearPage(true);
+        const notFoundDiv = document.querySelector('#not_found_div');
         const notFoundH = document.createElement('h1');
         const notFoundHTwo = document.createElement('h2');
         notFoundH.style.opacity = '99%';
@@ -39,7 +40,8 @@ function fetchPokemonOrType(e) {
         if (searchBy === 'pokemon') {
             searchBy = 'Pokémon'
         }
-        searchThis = searchThis[0].toUpperCase() + searchThis.substring(1);
+        searchBy = searchBy[0].toUpperCase() + searchBy.substring(1);
+        searchThis = `"${searchThis}"`
         notFoundH.innerHTML = `${searchThis} is not a known ${searchBy}`;
         notFoundHTwo.innerHTML = `Check your spelling and make sure you searched with the correct filter.`
         notFoundDiv.appendChild(notFoundH);
@@ -317,13 +319,13 @@ function clearPage(clearTableBool) {
         const tableEvolvesTo = document.querySelector('#evolves_into');
         tableEvolvesTo.innerHTML = "";
 
-        // const typeSearched = document.querySelector('#type_searched');
-        // typeSearched.innerHTML = "";
-        // const ddTo = document.querySelector('#double_damage_to');
-        // ddTo.innerHTML = "";
-        // const ddFrom = document.querySelector('#double_damage_from');
-        // ddTo.innerHTML = "";
-        // const hdTo = document.querySelector('#half_damage_to');
+        const typeSearched = document.querySelector('#type_searched');
+        typeSearched.innerHTML = "";
+        const ddTo = document.querySelector('#double_damage_to');
+        ddTo.innerHTML = "";
+        const ddFrom = document.querySelector('#double_damage_from');
+        ddTo.innerHTML = "";
+        const hdTo = document.querySelector('#half_damage_to');
         // hdTo.innerHTML = "";
         // const hdFrom = document.querySelector('#half_damag_from');
         // hdFrom.innerHTML = "";
@@ -331,6 +333,13 @@ function clearPage(clearTableBool) {
         while (pokeType.firstChild) {
             pokeType.firstChild.remove();
         }
+        const notFound = document.querySelector('#not_found_div');
+        if (notFound!== null) {
+            while (notFound.firstChild) {
+                notFound.firstChild.remove();
+            }
+        }
+
     }
     const typeTable = document.querySelector('#type_table_container');
     typeTable.style.display = 'none';
