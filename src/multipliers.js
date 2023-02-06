@@ -1,3 +1,7 @@
+//code by Naramsim
+//all_types.json also from Naramsim
+//https://github.com/Naramsim/Colosseum
+
 import all_types from './all_types.json' assert {type: "json"};
 export default function getMultipliers(types) {
     var multipliers = {
