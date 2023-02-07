@@ -1,3 +1,26 @@
+//LIST OF POKEMON THAT DON'T WORK CURRENTLY
+//Deoxys
+//Shaymin
+//Darmanitan
+//Lycanroc
+//Thundurus
+//Tornadus
+//Landorus
+//Keldeo
+//Meloetta
+//aegislash
+//zygarde
+//oricorio
+//wishiwashi
+//minior
+//mimikyu
+//toxtricity
+//eiscue
+//morpeko
+//urshifu
+
+//gen 11 pokemon
+
 import getMultipliers from "./multipliers.js";
 let dropDown;
 let userSearchBar;
@@ -42,7 +65,7 @@ function fetchPokemonOrType(e) {
         }
         searchBy = searchBy[0].toUpperCase() + searchBy.substring(1);
         searchThis = `"${searchThis}"`
-        notFoundH.innerHTML = `${searchThis} is not a known ${searchBy}`;
+        notFoundH.innerHTML = `${searchThis} is not a known ${searchBy}, or there was an error with your search.`;
         notFoundHTwo.innerHTML = `Check your spelling and make sure you searched with the correct filter.`
         notFoundDiv.appendChild(notFoundH);
         notFoundDiv.appendChild(notFoundHTwo);
@@ -75,11 +98,7 @@ function createPokemonListing(obj) {
 }
 
 function fetchTypeDetails(types, obj) {
-    const lowerTypes = [];
-     types.forEach(function(type) {
-        type = type.toLowerCase();
-        lowerTypes.push(type)
-    })
+    const lowerTypes = types.map(x => x.toLowerCase());
     const multipliers = getMultipliers(lowerTypes);
     const tdStrength = document.querySelector('#strong_against');
     const tdWeak = document.querySelector('#weak_against');
